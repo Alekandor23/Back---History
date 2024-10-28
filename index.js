@@ -10,11 +10,20 @@ const app = express()
 app.use(express.json())
 //app.use(libroRoutes);
 
+const allowedOrigins = ['https://historyfrontend.onrender.com', 'http://localhost:5173'];
+
 app.use(cors({
-    origin: 'https://historyfrontend.onrender.com',
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('No permitido por CORS'));
+        }
+    },
     credentials: true,
-    methods : ['GET', 'POST', 'PUT', 'DELETE']
+    methods: ['GET', 'POST', 'PUT', 'DELETE']
 }));
+
 
 app.use('/', route);
 
